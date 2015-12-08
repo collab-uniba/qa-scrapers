@@ -4,11 +4,11 @@ Specifically is focused to extraction of questions and answers of Quora's topic.
  
 # How does it work
 In this project there are two different script:
-* topic.py
+* topic.py.
   The smaller part of the project, which allows the scraper to get the list of sub-topics in reference of a particular topic.
   In this way the scraper still remains into related topics, referring the starting quora topic
   For example see the section Organize of topic [Computer Programming Organize](https://www.quora.com/topic/Computer-Programming/organize) and its hierarchy topic. 
-* quora.py
+* quora.py.
   More consistent than the previous script. It allows the parsing of questions and answers always remaining in the related topics.
   It's based on Scrapy that makes requests for parsing question-threads and Selenium web driver framework for web automation mechanize.
   By combining these two frameworks it is possible to obtain a large number of questions and answers, useful to study and analyze the contents of Quora.
