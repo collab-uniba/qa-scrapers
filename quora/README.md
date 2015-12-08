@@ -17,7 +17,7 @@ In this project there are two different script:
 1. Download the content of this directory
 2. Install all the requirements with: `pip install -r requirements.txt`
 3. Download [PhantomJS](http://phantomjs.org/) (for Windows or OSX) and unzip
-4. Move phantomjs binary package into `spiders` directory 
+4. Move `phantomjs.exe`(Windows) or `phantomjs`(OSX) into `spiders` directory 
 
 # Getting Started
 1. Start the first `topic.bat` louncher that takes like a parameter the url-organize of the topic. 
