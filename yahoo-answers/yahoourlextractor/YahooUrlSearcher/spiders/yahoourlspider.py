@@ -92,7 +92,7 @@ class MySpider(scrapy.Spider):
 
                 try:
                     # Check if server print error label
-                    if (self.driver.find_element_by_id("ya-stream-error")):
+                    if self.driver.find_element_by_id("ya-stream-error"):
                         break
                 except NoSuchElementException:
                     pass
