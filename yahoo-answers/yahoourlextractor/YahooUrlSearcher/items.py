@@ -13,4 +13,4 @@ class YahoourlsearcherItem(scrapy.Item):
     # name = scrapy.Field()
     url = scrapy.Field()
     date = scrapy.Field()
-    
+
