@@ -41,9 +41,9 @@ class DBPipeline(object):
                        url=item['url']
                        )
         #Count questions and answers
-        if ("question" in item['type']):
+        if "question" in item['type']:
             self.number_of_questions+=1
-            if(self.last_id<item['uid']):
+            if self.last_id<item['uid']:
                 self.last_id=item['uid']
         else:
             self.number_of_answers+=1
