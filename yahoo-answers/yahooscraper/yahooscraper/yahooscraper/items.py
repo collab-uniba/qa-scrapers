@@ -21,4 +21,3 @@ class YahooItem(scrapy.Item):
     resolve = scrapy.Field()
     upvotes = scrapy.Field()
     url = scrapy.Field()
-    pass
