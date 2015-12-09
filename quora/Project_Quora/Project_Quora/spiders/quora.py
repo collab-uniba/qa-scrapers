@@ -8,7 +8,7 @@ import parsedatetime as pdt
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
@@ -64,7 +64,7 @@ class QuoraSpider(scrapy.Spider):
         self.driver.refresh()
         time.sleep(2)
 
-        print "Login to Quora.."
+        print ('Login to Quora..')
         while True:
             # Entering your username and password
             form = self.driver.find_element_by_class_name('login')
@@ -84,7 +84,7 @@ class QuoraSpider(scrapy.Spider):
                 if self.driver.find_element_by_css_selector(
                         'div[id*="_error"]').is_displayed():
                     self.driver.refresh()
-                    print "Login Error.Retry"
+                    print ('Login Error.Retry')
                     email = raw_input("Insert username: ")
                     passw = raw_input("Insert password: ")
             except NoSuchElementException:
@@ -92,6 +92,7 @@ class QuoraSpider(scrapy.Spider):
 
     def start_requests(self):
         # Request for parsing the '/all-questions' section of a topic
+
         for filename in self.list_of_files:
             filename = filename.replace('\\', '')
             filename = filename.replace('/', '')
@@ -99,7 +100,6 @@ class QuoraSpider(scrapy.Spider):
             filename = filename.replace('.txt', '')
             yield scrapy.Request('https://www.quora.com/topic/' +
                                  filename + '/all_questions', self.parse)
-
 
     def spider_closed(self, spider):
         self.driver.close()
@@ -121,7 +121,7 @@ class QuoraSpider(scrapy.Spider):
             if self.driver.find_element_by_xpath(
                     '//div[contains(@class,"pager_next")]').is_displayed():
                 try:
-                    self.wait.until(EC.invisibility_of_element_located(
+                    self.wait.until(ec.invisibility_of_element_located(
                         (By.CLASS_NAME, "pager_next")))
                 except TimeoutException:
                     self.driver.refresh()
@@ -153,7 +153,7 @@ class QuoraSpider(scrapy.Spider):
                 "return document.body.scrollHeight")
             post_elems = self.driver.find_elements_by_class_name(
                 "pagedlist_item")
-            print "Question found: " + str(len(post_elems))
+            print ('Question found: ' + str(len(post_elems)))
 
         # Extraction of urls questions with selectors
         post_elems = self.driver.find_elements_by_class_name("pagedlist_item")
@@ -215,7 +215,7 @@ class QuoraSpider(scrapy.Spider):
 
                     while True:
                         try:
-                            self.wait.until(EC.element_to_be_clickable(
+                            self.wait.until(ec.element_to_be_clickable(
                                 (By.XPATH,
                                  '//span/a[contains(@class,"expand_link")]')))
                             break
@@ -225,7 +225,7 @@ class QuoraSpider(scrapy.Spider):
                     webdriver.ActionChains(self.driver).move_to_element(
                         more_btn).click(more_btn).perform()
 
-                    self.wait.until(EC.invisibility_of_element_located(
+                    self.wait.until(ec.invisibility_of_element_located(
                         (By.XPATH, more_btn)))
                     time.sleep(1)
 
@@ -266,7 +266,6 @@ class QuoraSpider(scrapy.Spider):
 
             self.uid += 1
             try:
-                grid = self.driver.find_element_by_class_name('AnswerListDiv')
                 answers = self.driver.find_elements_by_xpath(
                     '//div[contains(@class, "Answer AnswerBase")]')
             except NoSuchElementException:
@@ -284,7 +283,7 @@ class QuoraSpider(scrapy.Spider):
                             '//div[contains(@class,"pager_next")]') \
                             .is_displayed():
                         try:
-                            self.wait.until(EC.invisibility_of_element_located(
+                            self.wait.until(ec.invisibility_of_element_located(
                                 (By.CLASS_NAME, "pager_next")))
                         except TimeoutException:
                             self.driver.refresh()
@@ -301,7 +300,7 @@ class QuoraSpider(scrapy.Spider):
                 answers = grid.find_elements_by_xpath(
                     './/div[contains(@class, "Answer AnswerBase")]')
             try:
-                self.wait.until(EC.invisibility_of_element_located(
+                self.wait.until(ec.invisibility_of_element_located(
                     (By.CLASS_NAME, "toggled_spinner")))
             except TimeoutException:
                 pass
@@ -321,6 +320,7 @@ class QuoraSpider(scrapy.Spider):
                     'utf8', 'ignore')
             except NoSuchElementException:
                 itemquest['author'] = "Anonymous"
+                pass
 
             try:
                 for elem in right_content.find_elements_by_xpath(
@@ -332,6 +332,7 @@ class QuoraSpider(scrapy.Spider):
                             view.group(1).replace(',', ''))
             except NoSuchElementException:
                 itemquest['views'] = 0
+                pass
 
             try:
                 date_time = right_content.find_element_by_xpath(
@@ -342,6 +343,7 @@ class QuoraSpider(scrapy.Spider):
                 itemquest['date_time'] = data_format[0].strftime(f)
             except NoSuchElementException:
                 itemquest['date_time'] = '0000-00-00 00:00:00'
+                pass
 
             try:
                 itemquest['title'] = question.find_element_by_xpath(
@@ -349,6 +351,7 @@ class QuoraSpider(scrapy.Spider):
                     .text.encode('utf8', 'ignore')
             except NoSuchElementException:
                 itemquest['title'] = 'null'
+                pass
 
             try:
                 content = question.find_element_by_css_selector(
@@ -382,6 +385,7 @@ class QuoraSpider(scrapy.Spider):
                     itemquest['text'] = 'null'
             except NoSuchElementException:
                 itemquest['text'] = 'null'
+                pass
 
             itemquest['tags'] = tag_string.encode('utf8')
             itemquest['answers'] = len(answers)
@@ -405,6 +409,7 @@ class QuoraSpider(scrapy.Spider):
                             .get_attribute('alt').encode('utf8', 'ignore')
                     except NoSuchElementException:
                         itemans['author'] = "Anonymous"
+                        pass
 
                     itemans['title'] = 'null'
 
@@ -423,7 +428,7 @@ class QuoraSpider(scrapy.Spider):
                                 .move_to_element(more) \
                                 .click(more).perform()
 
-                            self.wait.until(EC.invisibility_of_element_located(
+                            self.wait.until(ec.invisibility_of_element_located(
                                 (By.CLASS_NAME, 'loading')))
                             time.sleep(1)
                     except NoSuchElementException:

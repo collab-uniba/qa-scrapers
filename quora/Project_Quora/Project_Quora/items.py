@@ -21,4 +21,3 @@ class ProjectQuoraItem(scrapy.Item):
     resolve = scrapy.Field()  # always null
     upvotes = scrapy.Field()  # likes for a question (null) or an answers
     url = scrapy.Field()  # url of a question or an answer
-    pass

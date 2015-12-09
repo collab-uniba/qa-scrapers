@@ -52,9 +52,9 @@ class DBPipeline(object):
             else:
                 j += 1
 
-        print "Number of questions and answers found:"
-        print str(i) + " questions \n"
-        print str(j) + " answers \n"
+        print ('Number of questions and answers found:')
+        print (str(i) + ' questions \n')
+        print (str(j) + ' answers \n')
 
 
 class JsonWriterPipeline(object):

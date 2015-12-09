@@ -80,6 +80,7 @@ Berkeley DB
 Ruby Blocks
 HTML
 Cascalog
+Twilio
 Serialization
 CouchApps
 Threading in Python
@@ -504,7 +505,6 @@ Web Development on Mac OS X
 Breezi
 Cramp
 Bluestar Applications
-Durbhash
 Types of Computer Programming
 Uber API
 C++ (programming language)
