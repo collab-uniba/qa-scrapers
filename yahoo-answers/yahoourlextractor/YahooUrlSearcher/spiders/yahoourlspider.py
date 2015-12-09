@@ -86,7 +86,7 @@ class MySpider(scrapy.Spider):
                     # if position still remain the same after the scroll down break the while loop
                     if old_position == new_position_in_page:
                         break
-                
+
 
                 except NoSuchElementException:
                     pass
