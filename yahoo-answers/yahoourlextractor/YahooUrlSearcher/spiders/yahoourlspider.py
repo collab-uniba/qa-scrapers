@@ -183,7 +183,7 @@ class MySpider(scrapy.Spider):
             match = re.search(r"(\d+ \w+ ago)$", date_value)
             # Take URL value
             url_accodare = url.get_attribute('href')
-            print url_accodare
+            print (url_accodare)
             item = YahoourlsearcherItem()
             item['url'] = str(url_accodare)
             item['date'] = str(match.group(1)).strip()
