@@ -34,7 +34,7 @@ class YahooScraper(scrapy.Spider):
         db_r.create('url', 'date', mode="open")
         # Check if the DB is empty or new
         if len(db_r)==0:
-            print "ERROR: Database not found or empty"
+            print ("ERROR: Database not found or empty")
             sys.exit()
         else:
             print ("Database elements: " + str(len(db_r)))
