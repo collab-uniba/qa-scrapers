@@ -84,7 +84,7 @@ class MySpider(scrapy.Spider):
                     new_position_in_page = self.driver.find_element_by_id(
                         "ya-infinite-scroll-message").location
                     # if position still remain the same after the scroll down break the while loop
-                    if (old_position == new_position_in_page):
+                    if old_position == new_position_in_page:
                         break
                     else:
                         pass
