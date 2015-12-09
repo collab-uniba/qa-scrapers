@@ -49,7 +49,7 @@ class YahoourlsearcherPipeline(object):
             #print (str(r["url"]) + " " + str(r["date"]) + " \n")
             url_structure.append(url_date(r["url"],r["date"]))
             i += 1
-        print str(i) + "Url in the DB \n"
+        print (str(i) + "Url in the DB \n")
         self.log_target.write("Session ends at: "+ str(datetime.datetime.strftime(datetime.datetime.now(), ' %Y-%m-%d %H:%M:%S ')) + "\n")
         print ("Session ends at: "+ str(datetime.datetime.strftime(datetime.datetime.now(), ' %Y-%m-%d %H:%M:%S ')) + "\n")
         self.log_target.write("*** Total url in the Database AFTER the search: "+ str(len(self.db)) + " ***" + "\n")
