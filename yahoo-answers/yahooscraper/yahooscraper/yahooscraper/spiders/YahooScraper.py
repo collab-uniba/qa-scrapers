@@ -80,7 +80,7 @@ class YahooScraper(scrapy.Spider):
             uid_copy = self.uid
 
             # Print current uid any 100 times
-            if (self.uid % 100 == 0):
+            if self.uid % 100 == 0:
                 print (str(self.uid))
             # Initialize scrapy item
             item = YahooItem()
