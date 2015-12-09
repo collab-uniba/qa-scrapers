@@ -11,12 +11,12 @@ from pydblite import Base
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 
-class url_date():
+class UrlDate():
     def __init__(self, url, date):
         self.url=url
         self.date=date
 
-class YahoourlsearcherPipeline(object):
+class YahooUrlSearcherPipeline(object):
     def open_spider(self, spider):
 
         filename = "urls_log.txt"
@@ -47,7 +47,7 @@ class YahoourlsearcherPipeline(object):
         i = 1
         for r in self.db:
             #print (str(r["url"]) + " " + str(r["date"]) + " \n")
-            url_structure.append(url_date(r["url"],r["date"]))
+            url_structure.append(UrlDate(r["url"],r["date"]))
             i += 1
         print (str(i) + "Url in the DB \n")
         self.log_target.write("Session ends at: "+ str(datetime.datetime.strftime(datetime.datetime.now(), ' %Y-%m-%d %H:%M:%S ')) + "\n")
