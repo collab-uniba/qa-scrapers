@@ -16,7 +16,7 @@ class UrlDate():
         self.url=url
         self.date=date
 
-class YahooUrlSearcherPipeline(object):
+class YahoourlsearcherPipeline(object):
     def open_spider(self, spider):
 
         filename = "urls_log.txt"
@@ -47,9 +47,9 @@ class YahooUrlSearcherPipeline(object):
         i = 1
         for r in self.db:
             #print (str(r["url"]) + " " + str(r["date"]) + " \n")
-            url_structure.append(UrlDate(r["url"],r["date"]))
+            url_structure.append(url_date(r["url"],r["date"]))
             i += 1
-        print (str(i) + "Url in the DB \n")
+        print str(i) + "Url in the DB \n"
         self.log_target.write("Session ends at: "+ str(datetime.datetime.strftime(datetime.datetime.now(), ' %Y-%m-%d %H:%M:%S ')) + "\n")
         print ("Session ends at: "+ str(datetime.datetime.strftime(datetime.datetime.now(), ' %Y-%m-%d %H:%M:%S ')) + "\n")
         self.log_target.write("*** Total url in the Database AFTER the search: "+ str(len(self.db)) + " ***" + "\n")

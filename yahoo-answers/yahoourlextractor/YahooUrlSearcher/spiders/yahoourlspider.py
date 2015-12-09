@@ -38,7 +38,7 @@ class MySpider(scrapy.Spider):
         time.sleep(2)
         # Print user agent info
         agent = self.driver.execute_script("return navigator.userAgent")
-        print (agent)
+        print agent
         self.driver.refresh()
         time.sleep(2)
 
@@ -84,15 +84,17 @@ class MySpider(scrapy.Spider):
                     new_position_in_page = self.driver.find_element_by_id(
                         "ya-infinite-scroll-message").location
                     # if position still remain the same after the scroll down break the while loop
-                    if old_position == new_position_in_page:
+                    if (old_position == new_position_in_page):
                         break
+                    else:
+                        pass
 
                 except NoSuchElementException:
                     pass
 
                 try:
                     # Check if server print error label
-                    if self.driver.find_element_by_id("ya-stream-error"):
+                    if (self.driver.find_element_by_id("ya-stream-error")):
                         break
                 except NoSuchElementException:
                     pass
@@ -174,6 +176,7 @@ class MySpider(scrapy.Spider):
             '//div[contains(@class,"Bfc")]')
         i = 0
         for post in post_elems:
+            Text = post.find_element_by_xpath('.//a').text
             url = post.find_element_by_xpath('.//a')
             # Take date value
             date_value = post.find_element_by_xpath(
@@ -181,7 +184,7 @@ class MySpider(scrapy.Spider):
             match = re.search(r"(\d+ \w+ ago)$", date_value)
             # Take URL value
             url_accodare = url.get_attribute('href')
-            print (url_accodare)
+            print url_accodare
             item = YahoourlsearcherItem()
             item['url'] = str(url_accodare)
             item['date'] = str(match.group(1)).strip()
