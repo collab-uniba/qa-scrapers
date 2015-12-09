@@ -174,7 +174,6 @@ class MySpider(scrapy.Spider):
             '//div[contains(@class,"Bfc")]')
         i = 0
         for post in post_elems:
-            Text = post.find_element_by_xpath('.//a').text
             url = post.find_element_by_xpath('.//a')
             # Take date value
             date_value = post.find_element_by_xpath(
