@@ -87,7 +87,7 @@ class YahooScraper(scrapy.Spider):
             # Read in the date field associated to URL if info data are present
             for istance in self.url_to_scrape:
                 if response.url == istance.url:
-                    if (istance.date == "not available"):
+                    if istance.date == "not available":
                         item['date_time'] = "not available"
                         break
                     else:
