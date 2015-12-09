@@ -38,7 +38,7 @@ class MySpider(scrapy.Spider):
         time.sleep(2)
         # Print user agent info
         agent = self.driver.execute_script("return navigator.userAgent")
-        print agent
+        print (agent)
         self.driver.refresh()
         time.sleep(2)
 
