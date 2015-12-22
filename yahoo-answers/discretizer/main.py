@@ -5,6 +5,7 @@ from discretizer import Discretizer
 
 def main():
     program_name = os.path.basename(sys.argv[0])
+    #Database name
     db_files = {'yahoo': 'no_date_database.pdl'}
     try:
         db_names = sys.argv[1]
