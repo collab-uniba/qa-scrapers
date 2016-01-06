@@ -17,7 +17,7 @@ class Scraper():
     #Inizialize an instantiated object setting Firefox as browser and setting the url
     def __init__(self, url):
         #self.driver = webdriver.Firefox()
-        self.driver = webdriver.PhantomJS("Browser/phantomjs.exe")
+        self.driver = webdriver.PhantomJS()
         self.driver.get(url)
 
 
