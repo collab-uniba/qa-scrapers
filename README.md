@@ -41,7 +41,7 @@ It provides mechanisms to store the data extracted into ".json" and "pdl" ([PyDb
 1. Download the content of this directory
 2. Install all the requirements with: `pip install -r requirements.txt`
 3. Download [PhantomJS](http://phantomjs.org/) (for Windows or OSX) and unzip
-4. Move `phantomjs.exe`(Windows) or `phantomjs`(OSX) into `Browser` directory 
+4. Move `phantomjs.exe`(Windows) or `phantomjs`(OSX) into the directory 
 
 ### Getting Started
 To start the software you need to execute `Run.bat` file, into the main directory. It provides 2 alternative of execution:
