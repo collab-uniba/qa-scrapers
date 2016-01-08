@@ -33,14 +33,15 @@ pause
 GOTO begin
 
 :Resume
-c:\python27\python.exe %~dp0main.py %*
+c:\python27\python.exe "%~dp0scnscraper\main.py" %*
 
 :New
-del "%~dp0Items"
-del "%~dp0threads.json"
-del "%~dp0index.txt"
+if exist "%~dp0scnscraper\abap.pydb" (
+del "%~dp0scnscraper\abap.pydb"
+del "%~dp0scnscraper\abap.json"
+del "%~dp0scnscraper\index.txt" )
 :: Edit index file with start URL PAGE
-echo.>"index.txt"
-@echo 2 > index.txt
-c:\python27\python.exe %~dp0main.py %*
+c:\python27\python.exe "%~dp0scnscraper\main.py" %*
+PAUSE
+
 
