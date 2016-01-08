@@ -1,4 +1,3 @@
-
 """
     Compatible with Python 2 and Python 3
 """
@@ -39,6 +38,8 @@ class Discretizer:
             self.db.update({db_name: _db})
             _db.create_index('uid')
             _db.create_index('type')
+            self.log("Db {0}: printing simple strawman prediction accuracy for answers with max upvotes as best answer:".format(db_name), logging.INFO)
+            self._strawman(_db)
         if check is True:
             self.check_db(fix)
 
@@ -54,12 +55,12 @@ class Discretizer:
     def check_db(self, fix=False):
         self.log('Checking consistency for databases.', logging.INFO)
         for name, _db in self.db.items():
-            for question in _db._type['question']:
+            for question in _db._type['Question']:
                 expected_answers_count = int(question['answers'])
                 actual_answers_count = 0
                 for i in range(1, expected_answers_count + 1):
                     try:
-                        _db._uid[str(question['uid']) + '.' + str(i)][0]
+                        _db._uid[question['uid'][:-1] + str(i)][0]
                         actual_answers_count += 1
                     except IndexError:
                         break
@@ -72,7 +73,7 @@ class Discretizer:
                 self.log('Warning on record {0} from db {1}: empty text!'.format(record['uid'], name),
                          logging.WARNING)
 
-            for record in (_db('type') == 'answer') & (_db('tags') != 'N/A'):
+            for record in (_db('type') == 'Answer') & (_db('tags') != 'null'):
                 self.log('Warning on record {0} from db {1}: tags in answer!'.format(record['uid'], name),
                          logging.WARNING)
                 question_uid = record['uid'].split('.')[0]
@@ -88,7 +89,7 @@ class Discretizer:
         overall_threads = list()
         for name, _db in self.db.items():
             db_threads = list()
-            questions = _db._type['question']  # use db index
+            questions = _db._type['Question']  # use db index
             self.log('Loaded {0} questions (threads) from db {1}, attaching answers...'.format(len(questions), name),
                      logging.DEBUG)
             for question in questions:
@@ -106,7 +107,7 @@ class Discretizer:
         answers = list()
         if answers_count > 0:
             for i in range(1, answers_count + 1):
-                answer_id = '{0}.{1}'.format(question_id, i)
+                answer_id = str(question_id)[:-1] + str(i)
                 for answer in (_db._uid[answer_id]):  # use index
                     answers.append(answer)
             if answers_count != len(answers):
@@ -114,6 +115,64 @@ class Discretizer:
                          'fix=True'.format(question_id, len(answers), answers_count),
                          logging.WARNING)
         return answers
+
+    @staticmethod
+    def _strawman(_db):
+        # assumes index on uid already exists
+        # db.create_index('uid')
+        questions_with_answers = (_db("type") == 'Question') & (_db("answers") > 0)
+        a = 0
+        b = 0
+        c = 0
+        d = 0
+
+        total_answer_count = 0
+        for q in questions_with_answers:
+            thread_answers = list()
+            answers_count = int(q['answers'])
+            total_answer_count += answers_count
+            if answers_count > 0:
+                for i in range(1, answers_count + 1):
+                    answer_id = q['uid'][:-1] + str(i)
+                    for answer in (_db._uid[answer_id]):  # use index
+                        print(answer_id)
+                        thread_answers.append(answer)
+            # compute upvotes
+            max_upvote = 0
+            for answer in thread_answers:
+                if (answer['upvotes'] == '---'):
+                    count = 0
+                else:
+                    count = int(answer['upvotes'])
+                if count > max_upvote:
+                    max_upvote = count
+
+            output = list()
+            prediction = None
+            for answer in thread_answers:
+                if (answer['upvotes'] == '---'):
+                    count = 0
+                else:
+                    count = int(answer['upvotes'])
+                if count == max_upvote:
+                    prediction = 'solution'
+                else:
+                    prediction = ''
+
+                output.append((answer['uid'], answer['resolve'], prediction))
+                if prediction == 'solution' and answer['resolve'] == 'solution':
+                    a += 1
+                if prediction == '' and answer['resolve'] == '---':
+                    b += 1
+                if prediction == 'solution' and answer['resolve'] == '---':
+                    c += 1
+                if prediction == '' and answer['resolve'] == 'solution':
+                    d += 1
+
+        print(_db.name)
+        print("a = {0} | b = {1}\nc = {2} | d = {3}".format(a, b, c, d))
+        print("Total answers %s" % total_answer_count)
+        print("Accuracy {0}".format((float(a + b) / float(total_answer_count))))
 
     def compute_features(self, threads, stemmed_vocabulary, distrib_matrix):
         self.log('Computing features. Please, wait. This will take some serious time...', logging.INFO)
@@ -126,14 +185,17 @@ class Discretizer:
             except AttributeError:
                 base_date = thread['date_time']
             answers = thread['answers']
-            tag_list = thread['tags'].split('.')
+            try:
+                tag_list = thread['tags'].split('.')
+            except AttributeError:
+                tag_list = thread['tags']  # there is no '.' used as tag separator
             if '' in tag_list:
                 tag_list.remove('')
             for answer in answers:
                 # compute thread tags
                 answer_tags = answer['tags'].split()
-                if 'N/A' in answer_tags:
-                    answer_tags.remove('N/A')
+                if 'null' in answer_tags:
+                    answer_tags.remove('null')
                 tag_list.extend(answer_tags)
                 thread['tags'] = sorted(set(tag_list))
 
@@ -168,10 +230,12 @@ class Discretizer:
                     creation_date = parse_date(answer['date_time'])
                 except AttributeError:
                     creation_date = answer['date_time']
+                except Exception:
+                    print('\nInvalid date_time')
                 time_difference = abs((creation_date - base_date).total_seconds())
                 answer['time_difference'] = time_difference
 
-                # TODO upvotes score
+                #answer['upvotes'] = thread['upvotes']
 
                 # check for urls and code snippets
                 match = re.search(r'http(s)?://', str(answer['text']), re.MULTILINE)
@@ -199,7 +263,7 @@ class Discretizer:
                 answer['F-K_ascending'] = fk
 
             # compute ranks
-            answers = Discretizer._sort_rank(answers, 'upvotes', reverse=True)
+            #answers = Discretizer._sort_rank(answers, 'upvotes', reverse=True)
             answers = Discretizer._sort_rank(answers, 'sentences', reverse=True)
             answers = Discretizer._sort_rank(answers, 'len', reverse=True)
             answers = Discretizer._sort_rank(answers, 'views', reverse=True)
@@ -308,20 +372,25 @@ class Discretizer:
 
     @staticmethod
     def _sort_rank(answers, key, reverse=True):
-        new_list = sorted(answers, key=lambda x: float(x[key]), reverse=reverse)
-        ranks = dict()
-        for i in range(0, len(answers)):
-            ranks[new_list[i]['uid']] = i + 1
+        try:
+            new_list = sorted(answers, key=lambda x: float(x[key]), reverse=reverse)
+            ranks = dict()
+            for i in range(0, len(answers)):
+                ranks[new_list[i]['uid']] = i + 1
 
-        # fix rank ties
-        for i in range(0, len(answers)-1):
-            if new_list[i][key] == new_list[i+1][key]:
-                ranks[new_list[i+1]['uid']] = ranks[new_list[i]['uid']]
+            # fix rank ties
+            for i in range(0, len(answers)-1):
+                if new_list[i][key] == new_list[i+1][key]:
+                    ranks[new_list[i+1]['uid']] = ranks[new_list[i]['uid']]
 
-        for k, v in ranks.items():
-            for a in answers:
-                if a['uid'] == k:
-                    a['{0}_rank'.format(key)] = v
+            for k, v in ranks.items():
+                for a in answers:
+                    if a['uid'] == k:
+                        a['{0}_rank'.format(key)] = v
+        except ValueError as e:
+            logging.log(level=logging.ERROR, msg="Error computing rank for feature %s" % key)
+            pass
+
         return answers
 
     def _has_codesnippet(self, text):
@@ -444,7 +513,7 @@ class Discretizer:
                   'views', 'views_rank', 'loglikelihood', 'loglikelihood_ascending_rank',
                   'loglikelihood_descending_rank', 'F-K', 'F-K_ascending_rank', 'F-K_descending_rank', 'upvotes',
                   'upvotes_rank', 'has_links', 'has_code_snippet', 'has_tags')
-        writer = csv.DictWriter(csvf, dialect=csv.excel, fieldnames=fields, delimiter=';', lineterminator=self.linesep)
+        writer = csv.DictWriter(csvf, dialect=csv.excel, fieldnames=fields, delimiter=',', lineterminator=self.linesep)
         writer.writeheader()
         # empty_line = dict.fromkeys(fields)
         for t in threads:
@@ -486,7 +555,10 @@ class Discretizer:
                 row['longest_sentence'] = a['longest_sentence']
                 row['longest_sentence_rank'] = a['longest_sentence_rank']
                 row['views'] = a['views']
-                row['views_rank'] = a['views_rank']
+                try:
+                    row['views_rank'] = a['views_rank']
+                except KeyError:
+                    pass
                 row['loglikelihood'] = a['loglikelihood']
                 row['loglikelihood_descending_rank'] = a['loglikelihood_descending_rank']
                 row['loglikelihood_ascending_rank'] = a['loglikelihood_ascending_rank']
@@ -494,7 +566,7 @@ class Discretizer:
                 row['F-K_descending_rank'] = a['F-K_descending_rank']
                 row['F-K_ascending_rank'] = a['F-K_ascending_rank']
                 row['upvotes'] = a['upvotes']
-                row['upvotes_rank'] = a['upvotes_rank']
+                #row['upvotes_rank'] = a['upvotes_rank']
                 row['has_links'] = a['has_links']
                 row['has_code_snippet'] = a['has_code_snippet']
                 row['date_time'] = a['date_time']
