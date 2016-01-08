@@ -18,7 +18,8 @@ class Scraper():
         try:
             self.driver = webdriver.PhantomJS('scnscraper/phantomjs.exe')
         except:
-            print('Please insert Phantomjs into directory and try again.')
+            print('Please insert Phantomjs into directory and try again. PRESS ENTER TO CONTINUE...\n')
+            raw_input()
         self.driver.get(url)
 
 
