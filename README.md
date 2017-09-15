@@ -18,7 +18,7 @@ Pleace, cite the following paper if you decide to use these scripts for your own
 @inproceedings{Calefato:2016:MSO:2961111.2962585,
  author = {Calefato, Fabio and Lanubile, Filippo and Novielli, Nicole},
  title = {Moving to Stack Overflow: Best-Answer Prediction in Legacy Developer Forums},
- booktitle = {Proceedings of the 10th ACM/IEEE International Symposium on Empirical Software Engineering and Measurement},
+ booktitle = {Proc. of the 10th ACM/IEEE Int'l Symposium on Empirical Software Engineering and Measurement},
  series = {ESEM '16},
  year = {2016},
  isbn = {978-1-4503-4427-2},
