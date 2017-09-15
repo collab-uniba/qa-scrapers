@@ -15,7 +15,7 @@ Pleace, cite the following paper if you decide to use these scripts for your own
 > F. Calefato, F. Lanubile, N. Novielli. “[Moving to Stack Overflow: Best-Answer Prediction in Legacy Developer Forums](http://collab.di.uniba.it/fabio/wp-content/uploads/sites/5/2014/05/a13-calefato.pdf).” In *Proc. 10th Int’l Symposium on Empirical Softw. Eng. and Measurement (ESEM’16)*, Ciudad Real, Spain, Sept. 8-9, 2016, DOI:[10.1145/2961111.2962585](http://doi.acm.org/10.1145/2961111.2962585).
 
 ```latex
-@inproceedings{Calefato:2016:MSO:2961111.2962585,
+@inproceedings{calefato_2016_esem,
  author = {Calefato, Fabio and Lanubile, Filippo and Novielli, Nicole},
  title = {Moving to Stack Overflow: Best-Answer Prediction in Legacy Developer Forums},
  booktitle = {Proc. of the 10th ACM/IEEE Int'l Symposium on Empirical Software Engineering and Measurement},
