@@ -12,7 +12,7 @@ Please, refer to the README.md files within each subfolder for more.
 ## Fair use policy
 Pleace, cite the following paper if you decide to use these scripts for your own research purposes.
 
-> F. Calefato, F. Lanubile, N. Novielli. “[Moving to Stack Overflow: Best-Answer Prediction in Legacy Developer Forums](http://collab.di.uniba.it/fabio/wp-content/uploads/sites/5/2014/05/a13-calefato.pdf).” In Proc. 10th Int’l Symposium on Empirical Softw. Eng. and Measurement (ESEM’16), Ciudad Real, Spain, Sept. 8-9, 2016, DOI:[10.1145/2961111.2962585](http://doi.acm.org/10.1145/2961111.2962585).
+> F. Calefato, F. Lanubile, N. Novielli. “[Moving to Stack Overflow: Best-Answer Prediction in Legacy Developer Forums](http://collab.di.uniba.it/fabio/wp-content/uploads/sites/5/2014/05/a13-calefato.pdf).” In *Proc. 10th Int’l Symposium on Empirical Softw. Eng. and Measurement (ESEM’16)*, Ciudad Real, Spain, Sept. 8-9, 2016, DOI:[10.1145/2961111.2962585](http://doi.acm.org/10.1145/2961111.2962585).
 
 ```latex
 @inproceedings{Calefato:2016:MSO:2961111.2962585,
